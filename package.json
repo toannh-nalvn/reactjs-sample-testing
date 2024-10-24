@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.113",
     "@types/react": "^18.3.11",
@@ -52,6 +51,7 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2"
