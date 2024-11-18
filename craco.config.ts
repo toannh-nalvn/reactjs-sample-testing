@@ -1,0 +1,10 @@
+import path from "path";
+
+export default {
+  webpack: {
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+      "@pages": path.resolve(__dirname, "src/pages"),
+    },
+  },
+};
