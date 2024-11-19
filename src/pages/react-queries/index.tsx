@@ -1,7 +1,7 @@
-import React from "react";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { useQuery } from "@tanstack/react-query";
+import { QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query";
 import axios from "axios";
+import { useEffect } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 // Định nghĩa kiểu dữ liệu cho người dùng và bài viết
 interface User {
@@ -19,14 +19,26 @@ interface FormData {
   post: string;
 }
 
+type Error = {
+  message: string;
+};
+
 // Hàm gọi API lấy danh sách người dùng
-const fetchUsers = () => axios.get<User[]>("https://jsonplaceholder.typicode.com/users");
-
+const fetchUsers = async () => {
+  const response = await axios.get<User[]>(
+    "https://jsonplaceholder.typicode.com/users"
+  );
+  return response.data; // Chỉ trả về dữ liệu
+};
 // Hàm gọi API lấy bài viết của một user
-const fetchPostsByUser = (userId: string) =>
-  axios.get<Post[]>(`https://jsonplaceholder.typicode.com/posts?userId=${userId}`);
+const fetchPostsByUser = async (userId: string): Promise<Post[]> => {
+  const response = await axios.get<Post[]>(
+    `https://jsonplaceholder.typicode.com/posts?userId=${userId}`
+  );
+  return response.data; // Chỉ trả về dữ liệu
+};
 
-const App: React.FC = () => {
+const ReactQueries = () => {
   const { register, handleSubmit, reset, watch } = useForm<FormData>({
     defaultValues: {
       user: "",
@@ -43,19 +55,25 @@ const App: React.FC = () => {
   // Theo dõi giá trị `user`
   const selectedUserId = watch("user");
 
-  // Gọi API để lấy bài viết của user bằng useQuery
-  const { data: posts, isLoading: loadingPosts } = useQuery<Post[]>({
-    queryKey: ["posts", selectedUserId], // Gắn key phụ thuộc vào `selectedUserId`
-    queryFn: () => fetchPostsByUser(selectedUserId),
-    enabled: !!selectedUserId, // Chỉ gọi API nếu `selectedUserId` tồn tại
-    onSuccess: (res) => {
-      // Reset giá trị form khi dữ liệu trả về
-      reset((formValues) => ({
-        ...formValues,
-        post: res[0]?.id || "", // Đặt giá trị mặc định cho `post`
-      }));
-    },
-  });
+  // Gọi `useQuery` với kiểu đầy đủ
+  const queryOptions: UseQueryOptions<Post[], Error, Post[], QueryKey> = {
+    queryKey: ["posts", selectedUserId],
+    queryFn: () =>
+      selectedUserId ? fetchPostsByUser(selectedUserId) : Promise.resolve([]),
+    enabled: !!selectedUserId,
+  };
+
+  const { data: posts, isLoading: loadingPosts } = useQuery(queryOptions);
+
+  useEffect(() => {
+    console.log('posts', posts);
+    if (posts?.length) {
+      reset({
+        ...watch(),
+        post: posts[0]?.id?.toString() || "",
+      });
+    }
+  }, [posts, reset, watch]);
 
   // Hàm xử lý khi submit form
   const onSubmit: SubmitHandler<FormData> = (data) => {
@@ -102,4 +120,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default ReactQueries;
