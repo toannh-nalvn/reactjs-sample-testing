@@ -1,92 +1,56 @@
-import { QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query";
-import axios from "axios";
-import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import styles from "./styles.module.scss";
 
-// Định nghĩa kiểu dữ liệu cho người dùng và bài viết
-interface User {
-  id: number;
-  name: string;
-}
-
-interface Post {
-  id: number;
-  title: string;
-}
-
-interface FormData {
-  user: string;
-  post: string;
-}
-
-type Error = {
-  message: string;
-};
-
-// Hàm gọi API lấy danh sách người dùng
-const fetchUsers = async () => {
-  const response = await axios.get<User[]>(
-    "https://jsonplaceholder.typicode.com/users"
-  );
-  return response.data; // Chỉ trả về dữ liệu
-};
-// Hàm gọi API lấy bài viết của một user
-const fetchPostsByUser = async (userId: string): Promise<Post[]> => {
-  const response = await axios.get<Post[]>(
-    `https://jsonplaceholder.typicode.com/posts?userId=${userId}`
-  );
-  return response.data; // Chỉ trả về dữ liệu
-};
+import { useFetchPostsByUser } from "./hooks/fetchPostsByUser";
+import { useFetchUsers } from "./hooks/fetchUsers";
+import { useFetchCommentsByPost } from "./hooks/useFetchCommentsByPost";
+import { useSetFirstComment } from "./hooks/useSetFirstComment";
+import { useSetFirstPost } from "./hooks/useSetFirstPost";
+import { useSetFirstUser } from "./hooks/useSetFirstUser";
+import { FormData } from "./types";
 
 const ReactQueries = () => {
-  const { register, handleSubmit, reset, watch } = useForm<FormData>({
+  const { register, handleSubmit, watch, setValue } = useForm<FormData>({
     defaultValues: {
       user: "",
       post: "",
+      comment: [""],
     },
   });
 
-  // Gọi API để lấy danh sách người dùng
-  const { data: users, isLoading: loadingUsers } = useQuery<User[]>({
-    queryKey: ["users"],
-    queryFn: fetchUsers,
-  });
-
-  // Theo dõi giá trị `user`
+  const { data: users, isLoading: loadingUsers } = useFetchUsers();
   const selectedUserId = watch("user");
 
-  // Gọi `useQuery` với kiểu đầy đủ
-  const queryOptions: UseQueryOptions<Post[], Error, Post[], QueryKey> = {
-    queryKey: ["posts", selectedUserId],
-    queryFn: () =>
-      selectedUserId ? fetchPostsByUser(selectedUserId) : Promise.resolve([]),
-    enabled: !!selectedUserId,
-  };
+  const { data: posts, isLoading: loadingPosts } =
+    useFetchPostsByUser(selectedUserId);
+  const selectedPostId = watch("post");
 
-  const { data: posts, isLoading: loadingPosts } = useQuery(queryOptions);
+  const { data: comments, isLoading: loadingComments } =
+    useFetchCommentsByPost(selectedPostId);
 
-  useEffect(() => {
-    console.log('posts', posts);
-    if (posts?.length) {
-      reset({
-        ...watch(),
-        post: posts[0]?.id?.toString() || "",
-      });
-    }
-  }, [posts, reset, watch]);
+  // Sử dụng custom hooks
+  useSetFirstUser(users, setValue);
+  useSetFirstPost(posts, setValue);
+  useSetFirstComment(comments, setValue);
 
   // Hàm xử lý khi submit form
   const onSubmit: SubmitHandler<FormData> = (data) => {
     console.log("Form Data:", data);
   };
 
-  if (loadingUsers || (loadingPosts && selectedUserId)) {
+  if (
+    loadingUsers ||
+    (loadingPosts && selectedUserId) ||
+    (loadingComments && selectedPostId)
+  ) {
     return <p>Loading...</p>;
   }
 
   return (
-    <div>
-      <h1>React Query và React Hook Form - Quan hệ User và Post</h1>
+    <div className={styles.container}>
+      <h1 className={styles.h1}>
+        React Query và React Hook Form - Quan hệ User Post, và Comments
+      </h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* Select User */}
         <div>
@@ -109,6 +73,19 @@ const ReactQueries = () => {
             {posts?.map((post) => (
               <option key={post.id} value={post.id.toString()}>
                 {post.title}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Select Comment */}
+        <div>
+          <label>Bình luận:</label>
+          <select {...register("comment")} multiple>
+            <option value="">Chọn bình luận</option>
+            {comments?.map((comment) => (
+              <option key={comment.id} value={comment.id.toString()}>
+                {comment.body}
               </option>
             ))}
           </select>
