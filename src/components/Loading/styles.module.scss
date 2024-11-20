@@ -1,0 +1,36 @@
+$loader-size: 50px;
+$border-size: 8px;
+$border-color: #ffa500;
+$animation-duration-short: 1s;
+$animation-duration-medium: 2s;
+$animation-duration-long: 4s;
+
+.loader {
+  width: $loader-size;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: $border-size solid transparent;
+  border-right-color: $border-color;
+  position: relative;
+  animation: l24 $animation-duration-short infinite linear;
+
+  &:before,
+  &:after {
+    content: "";
+    position: absolute;
+    inset: -$border-size;
+    border-radius: 50%;
+    border: inherit;
+    animation: l24 $animation-duration-medium infinite linear;
+  }
+
+  &:after {
+    animation-duration: $animation-duration-long;
+  }
+}
+
+@keyframes l24 {
+  100% {
+    transform: rotate(1turn);
+  }
+}
