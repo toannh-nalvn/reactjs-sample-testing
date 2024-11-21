@@ -13,10 +13,12 @@ const fetchUsers = async (): Promise<User[]> => {
   return response.data;
 };
 
-export const useFetchUsers = () => {
+const useFetchUsers = () => {
   return useQuery<User[]>({
     queryKey: ["users"],
     queryFn: fetchUsers,
     staleTime: 300000, // 5 phút
   });
 };
+
+export default useFetchUsers;

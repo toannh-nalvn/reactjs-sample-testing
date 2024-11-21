@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { FormData } from "../types";
-import { Post } from "./fetchPostsByUser";
+import { Post } from "./useFetchPostsByUser";
 
-export const useSetFirstPost = (
+const useSetFirstPost = (
   posts: Post[] | undefined,
   setValue: (name: keyof FormData, value: string) => void
 ) => {
@@ -14,3 +14,5 @@ export const useSetFirstPost = (
     }
   }, [posts, setValue]);
 };
+
+export default useSetFirstPost;

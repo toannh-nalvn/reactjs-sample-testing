@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { FormData } from "../types";
 import { Comment } from "./useFetchCommentsByPost";
 
-export const useSetFirstComment = (
+const useSetFirstComment = (
   comments: Comment[] | undefined,
   setValue: (name: keyof FormData, value: string[]) => void
 ) => {
@@ -18,3 +18,5 @@ export const useSetFirstComment = (
     }
   }, [comments, setValue]);
 };
+
+export default useSetFirstComment;

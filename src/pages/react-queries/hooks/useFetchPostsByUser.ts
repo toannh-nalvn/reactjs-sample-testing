@@ -13,7 +13,7 @@ const fetchPostsByUser = async (userId: string): Promise<Post[]> => {
   return response.data;
 };
 
-export const useFetchPostsByUser = (userId: string) => {
+const useFetchPostsByUser = (userId: string) => {
   return useQuery<Post[]>({
     queryKey: ["posts", userId],
     queryFn: () => fetchPostsByUser(userId),
@@ -21,3 +21,5 @@ export const useFetchPostsByUser = (userId: string) => {
     staleTime: 300000, // 5 phút
   });
 };
+
+export default useFetchPostsByUser;

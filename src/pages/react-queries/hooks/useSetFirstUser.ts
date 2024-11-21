@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 
 import { FormData } from "../types";
-import { User } from "./fetchUsers";
+import { User } from "./useFetchUsers";
 
-export const useSetFirstUser = (
+const useSetFirstUser = (
   users: User[] | undefined,
   setValue: (name: keyof FormData, value: string) => void
 ) => {
@@ -13,3 +13,5 @@ export const useSetFirstUser = (
     }
   }, [users, setValue]);
 };
+
+export default useSetFirstUser;

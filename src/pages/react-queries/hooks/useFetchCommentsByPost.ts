@@ -14,7 +14,7 @@ const fetchCommentsByPost = async (postId: string): Promise<Comment[]> => {
   return response.data;
 };
 
-export const useFetchCommentsByPost = (postId: string) => {
+const useFetchCommentsByPost = (postId: string) => {
   return useQuery<Comment[]>({
     queryKey: ["comments", postId],
     queryFn: () => fetchCommentsByPost(postId),
@@ -22,3 +22,5 @@ export const useFetchCommentsByPost = (postId: string) => {
     staleTime: 300000, // 5 phút
   });
 };
+
+export default useFetchCommentsByPost;

@@ -1,12 +1,7 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import styles from "./styles.module.scss";
 
-import { useFetchPostsByUser } from "./hooks/fetchPostsByUser";
-import { useFetchUsers } from "./hooks/fetchUsers";
-import { useFetchCommentsByPost } from "./hooks/useFetchCommentsByPost";
-import { useSetFirstComment } from "./hooks/useSetFirstComment";
-import { useSetFirstPost } from "./hooks/useSetFirstPost";
-import { useSetFirstUser } from "./hooks/useSetFirstUser";
+import { useFetchCommentsByPost, useFetchPostsByUser, useFetchUsers, useSetFirstComment, useSetFirstPost, useSetFirstUser } from "./hooks";
 import { FormData } from "./types";
 
 const ReactQueries = () => {
