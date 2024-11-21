@@ -43,7 +43,7 @@ Chúng ta sử dụng các interface trong TypeScript để đảm bảo rằng 
 ### Gọi API với React Query
 Chúng ta sẽ sử dụng useQuery từ React Query để gọi API lấy danh sách người dùng và bài viết của người dùng đó.
 
-```tsx
+```tsx 
 const fetchPostsByUser = async (userId: string): Promise<Post[]> => {
   const response = await axios.get<Post[]>(
     `https://jsonplaceholder.typicode.com/posts?userId=${userId}`
@@ -66,8 +66,7 @@ const fetchCommentsByPost = async (postId: string): Promise<Comment[]> => {
 };
 	```
 	
-Ở đây, chúng ta có hai hàm API:
-
+Ở đây, chúng ta có các hàm API:
 * fetchUsers: Lấy danh sách người dùng.
 * fetchPostsByUser: Lấy bài viết của người dùng dựa trên userId.
 * fetchCommentsByPost: Lấy comment của bài viết dựa trên postId.
@@ -83,6 +82,8 @@ const { register, handleSubmit, watch, setValue } = useForm<FormData>({
   },
 });
 ```
+
+Ở đây, chúng ta có các hàm:
 * register: Dùng để đăng ký các input trong form.
 * handleSubmit: Xử lý khi submit form.
 * setValue: Được dùng để thiết lập lại giá trị của form sau khi lấy dữ liệu từ API.
@@ -111,6 +112,7 @@ export const useSetFirstUser = (
 };
 ```
 
+Ở đây, chúng ta có các thông tin lưu ý:
 * staleTime: Cài đặt thời gian làm mới API.
 * setValue: Khi API trả về thành công, chúng ta sử dụng setValue để thiết lập giá trị mặc định cho user mặc định.
 
@@ -138,9 +140,9 @@ export const useSetFirstPost = (
     }
   }, [posts, setValue]);
 };
-
 ```
 
+Ở đây, chúng ta có các thông tin:
 * enabled: !!userId: Điều này đảm bảo rằng API chỉ được gọi khi người dùng đã chọn một người dùng.
 * useSetFirstPost: Khi API trả về thành công, chúng ta sử dụng setValue để thiết lập giá trị mặc định cho bài viết đầu tiên.
 
@@ -173,6 +175,7 @@ export const useSetFirstComment = (
 };
 ```
 
+Ở đây, chúng ta có các thông tin:
 * enabled: !!postId: Điều này đảm bảo rằng API chỉ được gọi khi người dùng đã chọn một bài viết.
 * useSetFirstComment: Khi API trả về thành công, chúng ta sử dụng setValue để thiết lập giá trị mặc định cho 2 comments đầu tiên.
 
@@ -185,8 +188,7 @@ const onSubmit: SubmitHandler<FormData> = (data) => {
 Trong hàm onSubmit, bạn có thể xử lý dữ liệu từ form (ví dụ: gửi đến một API khác hoặc làm một cái gì đó với dữ liệu).
 
 ### Hiển thị biểu mẫu
-Cuối cùng, chúng ta sẽ hiển thị biểu mẫu và thông tin người dùng đã chọn. Chúng ta sẽ sử dụng useQuery để hiển thị danh sách người dùng, bài viết và comment từ API. Cuối cùng, trông file code sẽ tương tự như:
-
+Cuối cùng, chúng ta sẽ hiển thị biểu mẫu và thông tin người dùng đã chọn:
 ```tsx
 import { SubmitHandler, useForm } from "react-hook-form";
 import styles from "./styles.module.scss";
@@ -294,7 +296,7 @@ export default ReactQueries;
 ![Ảnh minh hoạ](https://mm.nal.vn/files/r1mky61h67dr9kcm7n3579axty/public?h=P0Hzw7GUa0HxOyAFnRpX-bBlAsatRxLIXPP2Xk1vB_Q)
 
 ### Source code
-- [Source code tham khảo](https://github.com/toannh-nalvn/reactjs-sample-testing/releases/tag/v1.0.0)
+- [Source code tham khảo](https://github.com/toannh-nalvn/reactjs-sample-testing/tree/feature/blog-react-queries)
 
 ### Tổng kết
 Bài viết này đã hướng dẫn bạn cách sử dụng React Query để gọi API và React Hook Form để quản lý và xử lý dữ liệu biểu mẫu. Kết hợp hai thư viện này giúp giảm thiểu code, tăng khả năng tái sử dụng và làm cho việc quản lý dữ liệu API trở nên dễ dàng hơn.
